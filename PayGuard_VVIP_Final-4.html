@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PayGuard - Digital Payment Safety Assistant</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Arial,Helvetica,sans-serif;background:#eef3f8;color:#172033;padding-bottom:78px}
+.app{max-width:520px;margin:auto;background:#f7f9fc;min-height:100vh;box-shadow:0 0 30px rgba(0,0,0,.08)}
+header{background:linear-gradient(135deg,#102a43,#176b9c);color:white;padding:24px 20px 22px;position:sticky;top:0;z-index:20}
+.brand{font-size:25px;font-weight:800;letter-spacing:1px}.tag{font-size:12px;opacity:.88;margin-top:4px}
+main{padding:16px}
+.section{margin-bottom:18px;scroll-margin-top:92px}
+.hero{background:white;border-radius:20px;padding:22px;box-shadow:0 5px 18px rgba(25,55,85,.08);margin-bottom:16px}
+h1{font-size:25px;line-height:1.2;margin-bottom:9px}.sub{color:#657286;font-size:14px;line-height:1.55}
+.btn{display:block;width:100%;border:0;border-radius:13px;padding:14px 16px;margin-top:12px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;text-align:center}
+.primary{background:#176b9c;color:white}.secondary{background:#e8f1f7;color:#145579}.danger{background:#b42318;color:white}.success{background:#147d4d;color:white}
+.card{background:white;border-radius:18px;padding:18px;box-shadow:0 5px 18px rgba(25,55,85,.07);margin-bottom:14px}
+.card h2{font-size:19px;margin-bottom:12px}.card h3{font-size:16px;margin-bottom:8px}.muted{font-size:13px;color:#6c7788;line-height:1.5}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stat{background:white;border-radius:16px;padding:16px;box-shadow:0 4px 14px rgba(25,55,85,.06)}.stat b{display:block;font-size:25px;margin-bottom:4px}.stat span{font-size:12px;color:#697587}
+label{display:block;font-size:13px;font-weight:700;margin:14px 0 7px}input,textarea,select{width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:11px;font-size:15px;background:white;outline:none}input:focus,textarea:focus{border-color:#176b9c;box-shadow:0 0 0 3px rgba(23,107,156,.1)}textarea{min-height:90px;resize:vertical}
+.checkline{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:13px;line-height:1.4}.checkline input{width:18px;height:18px;margin-top:1px}
+.result{display:none;margin-top:16px;border-radius:16px;padding:17px;border:1px solid #d5dce5}.result.show{display:block}.risk{font-size:24px;font-weight:800;margin-bottom:7px}.low{background:#eaf8f0;border-color:#a9dec2}.low .risk{color:#147d4d}.medium{background:#fff8e6;border-color:#f1d18a}.medium .risk{color:#9a6700}.high{background:#fff0ef;border-color:#efb4af}.high .risk{color:#b42318}.reason{margin:8px 0 0 18px;font-size:13px;line-height:1.5}.score{font-weight:700;margin-bottom:5px}
+.tip{border:1px solid #e0e7ef;border-radius:14px;padding:14px;margin-top:10px;background:#fbfcfe}.tip b{display:block;margin-bottom:5px}.tip p{font-size:13px;color:#647184;line-height:1.45}
+.history-item{border-left:4px solid #176b9c;padding:11px 12px;margin:10px 0;background:#f8fafc;border-radius:10px;font-size:13px}.empty{text-align:center;color:#788597;padding:15px;font-size:13px}
+.note{font-size:12px;color:#657286;background:#eef5f9;border-radius:12px;padding:12px;margin-top:12px;line-height:1.5}
+footer{text-align:center;color:#7a8798;font-size:11px;padding:18px}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;background:white;border-top:1px solid #dce3eb;display:grid;grid-template-columns:repeat(4,1fr);z-index:30;box-shadow:0 -4px 16px rgba(0,0,0,.07)}nav a{text-decoration:none;color:#5f6c7c;text-align:center;padding:11px 4px 10px;font-size:11px;font-weight:700}nav a span{display:block;font-size:12px;margin-bottom:3px}nav a:hover{background:#f2f6f9;color:#176b9c}
+.smallbtn{display:inline-block;border:0;background:#e8f1f7;color:#145579;padding:9px 12px;border-radius:9px;font-weight:700;cursor:pointer;margin-top:9px}
+@media(max-width:360px){h1{font-size:22px}.stats{grid-template-columns:1fr}.brand{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand">PAYGUARD</div><div class="tag">Digital Payment Safety Assistant</div></header>
+<main>
+<section id="home" class="section">
+<div class="hero"><h1>Stay Safe with PayGuard</h1><p class="sub">Check a digital payment for common warning signs, review your safety habits, save your checks, and learn what to do when something looks suspicious.</p><a class="btn primary" href="#check">CHECK TRANSACTION</a><a class="btn secondary" href="#tips">SAFETY TIPS</a></div>
+<div class="stats"><div class="stat"><b id="checkCount">0</b><span>Checks Made</span></div><div class="stat"><b id="reportCount">0</b><span>Reports Saved</span></div></div>
+<div class="card" style="margin-top:14px"><h2>Quick Safety Status</h2><p class="muted">Always verify the receiver name and UPI ID before making a payment. Never share your UPI PIN or OTP.</p></div>
+</section>
+
+<section id="check" class="section">
+<div class="card"><h2>Check Transaction</h2><p class="muted">This academic prototype uses simple rule-based indicators. It does not connect to a bank or payment network.</p>
+<label for="amount">Transaction Amount (INR)</label><input id="amount" type="number" min="0" step="0.01" placeholder="Example: 15000">
+<label for="receiver">Receiver / UPI ID</label><input id="receiver" type="text" placeholder="Example: name@upi">
+<label class="checkline"><input id="newReceiver" type="checkbox"><span>This is a new receiver</span></label>
+<button class="btn primary" type="button" onclick="checkTransaction()">CHECK RISK</button>
+<div id="result" class="result"></div>
+<button class="btn secondary" type="button" onclick="resetCheck()">CLEAR FORM</button>
+</div></section>
+
+<section id="history" class="section">
+<div class="card"><h2>Transaction History</h2><p class="muted">Your prototype checks are saved only in this browser using local storage.</p><div id="historyList"></div><button class="smallbtn" onclick="clearHistory()">Clear History</button></div>
+</section>
+
+<section id="report" class="section">
+<div class="card"><h2>Report Suspicious Activity</h2><p class="muted">Use this demo form to record a suspicious-payment report for the project prototype.</p>
+<label for="reportType">Issue Type</label><select id="reportType"><option>Suspicious payment request</option><option>Unknown receiver</option><option>Suspicious link or message</option><option>Unauthorized transaction</option><option>Other</option></select>
+<label for="reportDetails">Details</label><textarea id="reportDetails" placeholder="Enter a short description"></textarea>
+<button class="btn danger" type="button" onclick="saveReport()">SAVE REPORT</button><div id="reportMsg" class="note" style="display:none"></div></div>
+</section>
+
+<section id="tips" class="section">
+<div class="card"><h2>Safety Tips</h2>
+<div class="tip"><b>Verify the receiver</b><p>Check the receiver name and UPI ID before confirming a payment.</p></div>
+<div class="tip"><b>Protect your PIN and OTP</b><p>Never share your UPI PIN, OTP, card PIN, or passwords with anyone.</p></div>
+<div class="tip"><b>Do not trust unknown requests</b><p>Be careful with unexpected collect requests, refund offers, prizes, and urgent payment demands.</p></div>
+<div class="tip"><b>Check links and messages</b><p>Avoid opening suspicious links or entering payment credentials on unknown pages.</p></div>
+<div class="tip"><b>Keep apps updated</b><p>Use official app stores and keep your device and payment apps updated.</p></div>
+<div class="tip"><b>Report quickly</b><p>If a real payment fraud occurs, contact your bank or payment provider through official channels as soon as possible.</p></div>
+</div>
+</section>
+
+<section id="emergency" class="section">
+<div class="card"><h2>Emergency Help</h2><p class="muted">If you believe a real transaction is fraudulent, act quickly.</p>
+<div class="tip"><b>1. Stop further payments</b><p>Do not send additional money to the suspicious receiver.</p></div>
+<div class="tip"><b>2. Contact the bank or payment provider</b><p>Use the official app, website, or customer-care channel.</p></div>
+<div class="tip"><b>3. Secure your account</b><p>Change credentials if needed and review recent transactions.</p></div>
+<div class="tip"><b>4. Preserve evidence</b><p>Keep transaction references, screenshots, and relevant messages for reporting.</p></div>
+<div class="note">This section is general educational guidance for the college prototype. For a real incident, follow the official instructions of your bank, payment provider, and relevant authorities.</div>
+</div></section>
+
+<section id="about" class="section">
+<div class="card"><h2>About PayGuard</h2><p class="muted">PayGuard is a student project concept designed to increase awareness of digital payment fraud and demonstrate how simple risk indicators can be presented through a mobile-friendly interface.</p><div class="note"><b>Project:</b> Digital Payment Fraud Awareness and Prevention System<br><b>Prototype:</b> PayGuard<br><b>Purpose:</b> Awareness, prevention education, and rule-based demonstration.</div></div>
+</section>
+</main>
+<footer>PayGuard | Academic Project Prototype</footer>
+</div>
+<nav>
+<a href="#home"><span>Home</span>Dashboard</a>
+<a href="#check"><span>Check</span>Risk</a>
+<a href="#history"><span>History</span>Checks</a>
+<a href="#tips"><span>Safety</span>Tips</a>
+</nav>
+<script>
+(function(){
+  const KEY_H='payguard_history_vvip';
+  const KEY_R='payguard_reports_vvip';
+  function getHistory(){try{return JSON.parse(localStorage.getItem(KEY_H)||'[]')}catch(e){return []}}
+  function setHistory(v){localStorage.setItem(KEY_H,JSON.stringify(v))}
+  function getReports(){return Number(localStorage.getItem(KEY_R)||0)}
+  function setReports(v){localStorage.setItem(KEY_R,String(v))}
+  window.checkTransaction=function(){
+    const amount=parseFloat(document.getElementById('amount').value)||0;
+    const receiver=document.getElementById('receiver').value.trim();
+    const isNew=document.getElementById('newReceiver').checked;
+    let score=0; const reasons=[];
+    if(amount>10000){score+=30;reasons.push('High transaction amount above INR 10,000.');}
+    if(isNew){score+=25;reasons.push('Receiver is marked as new.');}
+    if(!receiver){score+=15;reasons.push('Receiver or UPI ID is missing.');}
+    else if(receiver.indexOf('@')===-1){score+=15;reasons.push('Receiver value does not look like a standard UPI ID.');}
+    let level='LOW RISK', cls='low', action='Proceed only after verifying the receiver details.';
+    if(score>=60){level='HIGH RISK';cls='high';action='Stop and verify the payment carefully before proceeding.';}
+    else if(score>=30){level='MEDIUM RISK';cls='medium';action='Verify the receiver and payment details before proceeding.';}
+    const result=document.getElementById('result');
+    result.className='result show '+cls;
+    result.innerHTML='<div class="risk">'+level+'</div><div class="score">Risk Score: '+score+'</div><div>'+action+'</div><ul class="reason">'+(reasons.length?reasons.map(r=>'<li>'+r+'</li>').join(''):'<li>No major warning rule was triggered by this demo.</li>')+'</ul>';
+    const h=getHistory();
+    h.unshift({date:new Date().toLocaleString(),amount:amount,receiver:receiver||'Not provided',level:level,score:score});
+    setHistory(h.slice(0,20)); updateUI();
+  };
+  window.resetCheck=function(){document.getElementById('amount').value='';document.getElementById('receiver').value='';document.getElementById('newReceiver').checked=false;document.getElementById('result').className='result';document.getElementById('result').innerHTML='';};
+  window.clearHistory=function(){if(confirm('Clear saved transaction history?')){setHistory([]);updateUI();}};
+  window.saveReport=function(){const details=document.getElementById('reportDetails').value.trim();const msg=document.getElementById('reportMsg');if(!details){msg.style.display='block';msg.textContent='Please enter details before saving the report.';return;}setReports(getReports()+1);document.getElementById('reportDetails').value='';msg.style.display='block';msg.textContent='Suspicious activity report saved in this browser for the prototype.';updateUI();};
+  function updateUI(){
+    document.getElementById('checkCount').textContent=getHistory().length;
+    document.getElementById('reportCount').textContent=getReports();
+    const list=document.getElementById('historyList'); const h=getHistory();
+    if(!h.length){list.innerHTML='<div class="empty">No transaction checks yet.</div>';return;}
+    list.innerHTML=h.map(x=>'<div class="history-item"><b>'+x.level+'</b> | Score '+x.score+'<br>Amount: INR '+Number(x.amount).toLocaleString('en-IN')+'<br>Receiver: '+escapeHtml(x.receiver)+'<br><span class="muted">'+escapeHtml(x.date)+'</span></div>').join('');
+  }
+  function escapeHtml(s){return String(s).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]})}
+  updateUI();
+})();
+</script>
+</body>
+</html>
